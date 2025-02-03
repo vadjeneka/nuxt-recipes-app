@@ -1,77 +1,103 @@
-<script setup lang="ts">
-import { type RecipeResponse } from '../types/types'
-// const {data, error} = await useFetch("https://dummyjson.com/recipes?limit=12");
-const { data, error } = await useFetch<RecipeResponse>("https://dummyjson.com/recipes?limit=12");
+<template>
+  <div class="min-h-screen flex flex-col bg-white px-4 relative">
 
+    <div class="w-full flex items-center py-4">
+      <button class="text-black">
+        <ArrowLeft class="w-6 h-6" />
+      </button>
+      <h1 class="text-xl font-semibold ml-4">Remplacement de sim</h1>
+    </div>
+
+    <div class="flex flex-col flex-1 items-center justify-center py-5">
+      <div class="w-full flex justify-center my-4">
+        <img src="/Calque_1.png" alt="Illustration" class="w-2/3 max-w-xs" />
+      </div>
+
+      <div class="text-center relative">
+        <p class="text-2xl font-bold">
+          Plus besoin de vous déplacer en agence en cas de perte de votre carte
+        </p>
+        <p class="text-gray-400 text-sm mt-3">infos à ajouter</p>
+      </div>
+
+      <button
+        class="w-full bg-orange-500 text-white py-3 rounded-lg shadow-md hover:bg-orange-600 mt-5"
+        @click="showOverlay = true"
+      >
+        Souscrire Maintenant
+      </button>
+
+      <div class="mt-5 w-full bg-orange-100 text-orange-700 p-5 rounded-lg flex items-center mb-3">
+        <span class="flex-1">Service est uniquement disponible sur Abidjan</span>
+        <Info class="w-5 h-5" />
+      </div>
+    </div>
+
+    <!-- Overlay couvrant tout le texte sous l’image -->
+    <transition name="slide-up">
+      <div
+        v-if="showOverlay"
+        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-end"
+        @click.self="showOverlay = false"
+      >
+        <div
+          class="bg-white p-6 rounded-t-2xl shadow-lg w-full min-h-[50vh] flex flex-col"
+        >
+          <h2 class="text-lg font-bold text-center mb-3">Sélection du mode de récupération</h2>
+          <ul class="mt-4 space-y-5 flex-1">
+            <NuxtLink to="/#" >
+              <li class="flex justify-between items-center p-3 border-b-2">
+                <span class="w-16 h-16 bg-[#79747E] rounded-lg"></span>
+
+                <div class="flex flex-col flex-1 ml-4">
+                  <span class="text-sm text-gray-500">Mode 1</span>
+                  <span>Numéro de confiance</span>
+                </div>
+
+                <ChevronRight class="w-5 h-5 text-gray-500" />
+              </li>
+            </NuxtLink>
+            <li class="flex justify-between items-center p-3 border-b-2">
+              <span class="w-16 h-16 bg-[#79747E] rounded-lg"></span>
+
+              <div class="flex flex-col flex-1 ml-4">
+                <span class="text-sm text-gray-500">Mode 2</span>
+                <span>E-mail</span>
+              </div>
+
+              <ChevronRight class="w-5 h-5 text-gray-500" />
+            </li>
+            <li class="flex justify-between items-center p-3 border-b-2">
+              <span class="w-16 h-16 bg-[#79747E] rounded-lg"></span>
+
+              <div class="flex flex-col flex-1 ml-4">
+                <span class="text-sm text-gray-500">Mode 3</span>
+                <span>Numéro de confiance et E-mail</span>
+              </div>
+
+              <ChevronRight class="w-5 h-5 text-gray-500" />
+            </li>
+          </ul>
+        </div>
+      </div>
+    </transition>
+
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { Info, ArrowLeft, ArrowRight, ChevronRight} from 'lucide-vue-next';
+const showOverlay = ref(false);
 </script>
 
-<template>
-  <main>
-    <section class="bg-[#f1f1f1]">
-      <div class="container flex flex-col lg:flex-row items-center py-20 gap-10">
-        <div class="flex-1 order-2 lg:order-1 text-center lg:text-left">
-          <h1 class="text-4xl lg:text-6xl font-extrabold mb-6 text-balance">
-            Master the Kitchen with Ease: Unleash Your Inner Chef Today!
-          </h1>
-          <p class="text-xl lg:text-2xl mb-8 text-balance">
-            Discover recipes helping you to find the easiest way to cook.
-          </p>
-          <button
-            class="px-4 py-2 text-white self-start bg-orange-400 rounded-md text-lg cursor-pointer"
-          >
-            Browse Recipes
-          </button>
-        </div>
-        <div class="flex-1 order-1 lg:order-2">
-          <NuxtImg
-            sizes="xs:100vw sm:667px"
-            src="/nuxt-course-hero.png"
-            format="webp"
-            densities="x1"
-            alt=""
-          />
-        </div>
-      </div>
-    </section>
-    <section class="py-20 container">
-      <h2 class="text-3xl lg:text-5xl mb-2">Discover, Create, Share</h2>
-      <p class="text-lg lg:text-xl mb-8">Check out our most popular recipes!</p>
-      <div v-if="!error" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8">
-        <div v-for="(recipe, index) in data?.recipes" :key="`recipe-${index}`" class="flex flex-col shadow rounded-md">
-          <NuxtImg
-            :src="recipe.image"
-            sizes="xs:100vw sm:50vw lg:400px"
-            format="webp"
-            densities="x1"
-            alt=""
-            class="rounded-t-md"
-          />
-          <div class="flex flex-col py-6 px-4 flex-1 shadow-sm">
-            <p class="text-xl lg:text-2xl font-semibold mb-2">{{ recipe.name }}</p>
-            <div class="font-normal w-full bg-white/80 flex gap-8 text-lg lg:text-xl mb-4 mt-auto">
-              <div class="flex items-center gap-1">
-                <Icon name="mdi:clock-time-eight-outline" style="color: #f79f1a" />
-                <span>{{ recipe.cookTimeMinutes }}</span>
-              </div>
-              <div class="flex items-center gap-1">
-                <Icon name="mdi:fire" style="color: #f79f1a" />
-                <span>{{ recipe.caloriesPerServing }}</span>
-              </div>
-              <div class="flex items-center gap-1">
-                <Icon name="mdi:star" style="color: #f79f1a" />
-                <span>{{ recipe.rating }} ({{ recipe.reviewCount }})</span>
-              </div>
-            </div>
-            <NuxtLink
-              :to="`/recipes/${recipe.id}`"
-              class="px-4 py-2 text-white self-start bg-orange-400 rounded-md text-base lg:text-lg cursor-pointer"
-            >
-              View
-            </NuxtLink>
-          </div>
-        </div>
-      </div>
-      <p v-else class="text-xl">Opps, something went wrong. Please try again later</p>
-    </section>
-  </main>
-</template>
+<style scoped>
+/* Animation de slide depuis le bas */
+.slide-up-enter-active, .slide-up-leave-active {
+  transition: transform 0.3s ease-out, opacity 0.3s;
+}
+.slide-up-enter-from, .slide-up-leave-to {
+  transform: translateY(100%);
+  opacity: 0;
+}
+</style>

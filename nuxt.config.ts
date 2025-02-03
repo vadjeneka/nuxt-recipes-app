@@ -4,16 +4,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxtjs/tailwindcss',
-    '@nuxtjs/google-fonts',
     '@nuxt/icon',
-    '@nuxt/image'
+    '@nuxt/image',
+    "nuxt-lucide-icons"
+
   ],
-  googleFonts: {
-    families: {
-      Montserrat: true
-    },
-  },
-  image: {
-    domains: ["https://dummyjson.com/recipes"],
+  lucide: {
+    namePrefix: 'Icon'
   },
 });

@@ -8,9 +8,7 @@ export default {
       "dire-wolf": "#292727"
     },
 
-    fontFamily : {
-      Montserrat: "Montserrat, sans-serif",
-    },
+
     container: {
       center: true,
       padding: "2rem",
