@@ -1,16 +1,22 @@
 <template>
   <div class="min-h-screen flex flex-col bg-white px-4 relative">
 
-    <div class="w-full flex items-center py-4">
-      <button class="text-black">
-        <ArrowLeft class="w-6 h-6" />
-      </button>
-      <h1 class="text-xl font-semibold ml-4">Remplacement de sim</h1>
+    <div class="w-full">
+      <div class="w-full flex items-center py-4">
+        <button class="text-black">
+          <ArrowLeft class="w-6 h-6" />
+        </button>
+      </div>
+      <h1 class="text-2xl font-semibold ml-4">Remplacement de sim</h1>
     </div>
 
     <div class="flex flex-col flex-1 items-center justify-center py-5">
       <div class="w-full flex justify-center my-4">
-        <img src="/Calque_1.png" alt="Illustration" class="w-2/3 max-w-xs" />
+        <atom-illustration-image
+          source="/Calque_1.png"
+          :css-style="['w-2/3', 'max-w-xs']"
+          :alt="Illustration"
+        />
       </div>
 
       <div class="text-center relative">
@@ -21,7 +27,7 @@
       </div>
 
       <button
-        class="w-full bg-orange-500 text-white py-3 rounded-lg shadow-md hover:bg-orange-600 mt-5"
+        class="w-full bg-[#FF7900] text-white py-3 rounded-lg shadow-md hover:bg-orange-600 mt-5"
         @click="showOverlay = true"
       >
         Souscrire Maintenant
@@ -45,9 +51,11 @@
         >
           <h2 class="text-lg font-bold text-center mb-3">Sélection du mode de récupération</h2>
           <ul class="mt-4 space-y-5 flex-1">
-            <NuxtLink to="/#" >
+            <NuxtLink to="/phone-number" >
               <li class="flex justify-between items-center p-3 border-b-2">
-                <span class="w-16 h-16 bg-[#79747E] rounded-lg"></span>
+                <span class="w-16 h-16 bg-[#3e3e3e] rounded-lg flex justify-center items-center p-4">
+                  <img src="/principal.svg" class="w-full h-full" alt="principal" />
+                </span>
 
                 <div class="flex flex-col flex-1 ml-4">
                   <span class="text-sm text-gray-500">Mode 1</span>
@@ -57,26 +65,36 @@
                 <ChevronRight class="w-5 h-5 text-gray-500" />
               </li>
             </NuxtLink>
-            <li class="flex justify-between items-center p-3 border-b-2">
-              <span class="w-16 h-16 bg-[#79747E] rounded-lg"></span>
 
-              <div class="flex flex-col flex-1 ml-4">
-                <span class="text-sm text-gray-500">Mode 2</span>
-                <span>E-mail</span>
-              </div>
+            <NuxtLink to="/#" >
+              <li class="flex justify-between items-center p-3 border-b-2">
+                <span class="w-16 h-16 bg-[#3e3e3e] rounded-lg flex justify-center items-center p-4">
+                  <img src="/Group-130.svg" class="w-full h-full" alt="" />
+                </span>
 
-              <ChevronRight class="w-5 h-5 text-gray-500" />
-            </li>
-            <li class="flex justify-between items-center p-3 border-b-2">
-              <span class="w-16 h-16 bg-[#79747E] rounded-lg"></span>
+                <div class="flex flex-col flex-1 ml-4">
+                  <span class="text-sm text-gray-500">Mode 2</span>
+                  <span>E-mail</span>
+                </div>
 
-              <div class="flex flex-col flex-1 ml-4">
-                <span class="text-sm text-gray-500">Mode 3</span>
-                <span>Numéro de confiance et E-mail</span>
-              </div>
+                <ChevronRight class="w-5 h-5 text-gray-500" />
+              </li>
+            </NuxtLink>
 
-              <ChevronRight class="w-5 h-5 text-gray-500" />
-            </li>
+            <NuxtLink to="/#" >
+              <li class="flex justify-between items-center p-3 border-b-2">
+                <span class="w-16 h-16 bg-[#3e3e3e] rounded-lg flex justify-center items-center p-4">
+                  <img src="/Frame.svg" class="w-full h-full" alt="" />
+                </span>
+
+                <div class="flex flex-col flex-1 ml-4">
+                  <span class="text-sm text-gray-500">Mode 3</span>
+                  <span>Numéro de confiance et E-mail</span>
+                </div>
+
+                <ChevronRight class="w-5 h-5 text-gray-500" />
+              </li>
+              </NuxtLink>
           </ul>
         </div>
       </div>
