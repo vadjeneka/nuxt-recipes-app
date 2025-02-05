@@ -1,35 +1,22 @@
 <template>
   <div class="min-h-screen flex flex-col bg-white px-6">
-
-    <div class="w-full">
-      <div class="w-full flex items-center justify-between py-4 mt-5">
-        <button class="text-black" @click="$router.back()">
-          <ArrowLeft class="w-6 h-6" />
-        </button>
-        <div class="flex items-center space-x-4">
-          <Search class="w-6 h-6" />
-          <Bell class="w-6 h-6" />
-          <MessageCircleQuestion class="w-6 h-6" />
-          <UserCircle class="w-6 h-6 text-gray-400" />
-        </div>
-      </div>
-      <h1 class="text-2xl font-semibold ml-4">Remplacement de sim</h1>
-    </div>
+    <atom-page-header title="Souscrivez à l'offre" v-if="email"/>
+    <atom-page-header title="Remplacement de sim" v-if="phone"/>
 
     <div class="m-4">
       <div class="w-full bg-[#FF7900] rounded-full h-1.5 mb-4 dark:bg-gray-300">
-        <div class="bg-[#FF7900] h-1.5 rounded-full dark:bg-[#FF7900]" style="width: 15%"></div>
+        <div class="bg-[#FF7900] h-1.5 rounded-full dark:bg-[#FF7900]" style="width: 30%"></div>
       </div>
     </div>
 
 
     <p class="text-lg font-semibold mt-10">
-      Un OTP a été envoyé au <span class="text-[#FF7900] font-bold">{{ phone }}</span>
+      Un OTP a été envoyé au <span class="text-[#FF7900] font-bold">{{ phone || email }}</span>
     </p>
 
 
     <div class="flex justify-between mt-6">
-      <input 
+      <input
         v-for="(digit, index) in otp"
         :key="index"
         type="text"
@@ -42,9 +29,16 @@
 
 
     <p class="text-gray-500 text-sm mt-3">
-      Vous n'avez pas reçu votre code ? 
+      Vous n'avez pas reçu votre code ?
       <button class="text-blue-500 font-semibold" @click="resendOtp">Renvoyer OTP</button>
     </p>
+
+    <div v-if="showToast" class="mt-5">
+      <atom-toast
+        :message="toastMessage"
+        :type="toastType"
+      />
+    </div>
 
 
     <button
@@ -59,19 +53,29 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { ArrowLeft, Search, Bell, MessageCircleQuestion, UserCircle } from 'lucide-vue-next';
 
 const router = useRouter();
 const route = useRoute();
-const phone = ref('');
+const phone = ref<string | null>(null);
+const email = ref<string | null>(null);
+const mode = ref<string | null>(null);
 const otp = ref(Array(5).fill(''));
+const toastMessage = ref<string | null>(null);
+const showToast = ref(false);
+const toastType = ref<string | null>(null);
 
 const goToSetOrangeMoneySecretCode = () => {
-  router.push({ path: '/orange-money', query: { phone: phone.value } });
+  if (mode.value === '3') {
+    router.push({path: '/add-email', query: {phone: phone.value || email.value}})
+  } else {
+    router.push({ path: '/orange-money', query: { phone: phone.value || email.value } });
+  }
 };
 
 onMounted(() => {
-  phone.value = route.query.phone || null;
+  phone.value = route.query.phone ? String(route.query.phone) : null;
+  email.value = route.query.email ? String(route.query.email) : null;
+  mode.value = route.query.mode ? String(route.query.mode) : null;
 });
 
 const moveFocus = (index, event) => {
@@ -81,7 +85,7 @@ const moveFocus = (index, event) => {
 };
 
 const resendOtp = () => {
-  console.log('OTP renvoyé à', phone.value);
+  console.log('OTP renvoyé à', phone.value || email.value);
 };
 
 const verifyOtp = () => {
@@ -89,7 +93,13 @@ const verifyOtp = () => {
   if (otp.value.join('') === "00000") {
     goToSetOrangeMoneySecretCode()
   } else {
-    console.log("OTP INVALID DISPLAY MESSAGE ERROR")
+    showToast.value = true
+    toastMessage.value = "Otp invalide !";
+    toastType.value = "error"
+
+    setTimeout(() => {
+      showToast.value = false
+    }, 3000);
   }
 };
 </script>

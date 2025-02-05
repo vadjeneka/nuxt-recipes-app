@@ -66,7 +66,7 @@
               </li>
             </NuxtLink>
 
-            <NuxtLink to="/#" >
+            <NuxtLink to="/email" >
               <li class="flex justify-between items-center p-3 border-b-2">
                 <span class="w-16 h-16 bg-[#3e3e3e] rounded-lg flex justify-center items-center p-4">
                   <img src="/Group-130.svg" class="w-full h-full" alt="" />
@@ -81,7 +81,7 @@
               </li>
             </NuxtLink>
 
-            <NuxtLink to="/#" >
+            <NuxtLink to="/phone-email" >
               <li class="flex justify-between items-center p-3 border-b-2">
                 <span class="w-16 h-16 bg-[#3e3e3e] rounded-lg flex justify-center items-center p-4">
                   <img src="/Frame.svg" class="w-full h-full" alt="" />
@@ -110,7 +110,7 @@ const showOverlay = ref(false);
 </script>
 
 <style scoped>
-/* Animation de slide depuis le bas */
+
 .slide-up-enter-active, .slide-up-leave-active {
   transition: transform 0.3s ease-out, opacity 0.3s;
 }
