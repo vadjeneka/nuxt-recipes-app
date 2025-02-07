@@ -1,21 +1,6 @@
 <template>
   <div class="min-h-screen flex flex-col bg-white px-4 relative">
-    <!-- En-tête -->
-    <div class="w-full mt-5">
-      <div class="w-full flex items-center justify-between py-4 mt-3">
-        <button class="text-black" @click="$router.back()">
-          <ArrowLeft class="w-6 h-6" />
-        </button>
-        <div class="flex items-center space-x-4">
-          <Search class="w-6 h-6" />
-          <Bell class="w-6 h-6" />
-          <MessageCircleQuestion class="w-6 h-6" />
-          <UserCircle class="w-6 h-6 text-gray-400" />
-        </div>
-      </div>
-      <h1 class="text-2xl font-semibold ml-4">Sécurisez votre opération</h1>
-    </div>
-
+    <atom-page-header title="Sécurisez votre opération" />
 
     <div class="mt-5">
       <div class="w-full bg-[#FF7900] rounded-full h-1.5 mb-4 dark:bg-gray-300">
@@ -23,18 +8,15 @@
       </div>
     </div>
 
-
     <div class="text-center relative mt-3 ">
       <p class="text-black text-sm mt-3">
         Veuillez saisir votre code Orange Money afin de finaliser l'authentification.
       </p>
     </div>
 
-
     <div class="flex justify-center mt-5">
       <img src="/OM.svg" alt="Orange Money Logo" class="w-20 h-24" />
     </div>
-
 
     <div class="text-center mt-5">
       <p class="text-black text-lg font-semibold">Entrez votre secret code</p>
@@ -47,21 +29,35 @@
 
     <div class="flex-grow flex-col justify-end gap-4 pb-6">
       <div class="grid grid-cols-4 gap-4 mt-6 mx-auto w-96 mb-4">
+
         <button
-          v-for="num in shuffledNumbers"
+          v-for="num in shuffledNumbers.slice(0, 8)"
           :key="num"
           class="w-16 h-16 bg-white text-2xl rounded-lg shadow-sm"
           @click="enterDigit(num)"
         >
           {{ num }}
         </button>
-        <button class="w-16 h-16 bg-white text-2xl  rounded-lg shadow-sm" @click="enterDigit(0)">
+
+        <button class="w-16 h-16 bg-white text-2xl rounded-lg shadow-sm opacity-0" disabled></button>
+
+        <button
+          v-if="shuffledNumbers[8]"
+          class="w-16 h-16 bg-white text-2xl rounded-lg shadow-sm"
+          @click="enterDigit(shuffledNumbers[8])"
+        >
+          {{ shuffledNumbers[8] }}
+        </button>
+
+        <button class="w-16 h-16 bg-white text-2xl rounded-lg shadow-sm" @click="enterDigit(0)">
           0
         </button>
-        <button class="w-16 h-16 bg-white text-2xl  rounded-lg shadow-sm" @click="removeDigit">
+
+        <button class="w-16 h-16 bg-white text-2xl rounded-lg shadow-sm" @click="removeDigit">
           ⌫
         </button>
       </div>
+
       <div v-if="showToast" class="mt-5 w-full">
         <atom-toast
           :message="toastMessage"
@@ -81,18 +77,14 @@
 import { ref, computed } from 'vue';
 import { ArrowLeft, Search, Bell, MessageCircleQuestion, UserCircle } from 'lucide-vue-next';
 
-
 const enteredCode = ref<string[]>([]);
 const toastMessage = ref<string | null>(null);
 const showToast = ref(false);
 const toastType = ref<string | null>(null);
 const router = useRouter();
 
-
-
 const numbers = ref([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 const shuffledNumbers = computed(() => [...numbers.value].sort(() => Math.random() - 0.5));
-
 
 const goToConfirmation = () => {
   router.push({ path: '/confirmation'});
@@ -104,7 +96,6 @@ const enterDigit = (digit: number) => {
   }
 };
 
-
 const removeDigit = () => {
   enteredCode.value.pop();
 };
@@ -114,32 +105,34 @@ const verifySecretCode = () => {
 
   if (enteredCode.value.length === 4) {
     const enteredString = enteredCode.value.join("");
-    console.log("ENTERED CODE", enteredString);
 
     if (enteredString === goodCode) {
       toastMessage.value = "Code valide !";
-      toastType.value = "success"
-      goToConfirmation()
+      toastType.value = "success";
+
+      setTimeout(() => {
+        showToast.value = false;
+        goToConfirmation();
+      }, 2000);
+
     } else {
       toastMessage.value = "Code incorrect !";
-      toastType.value = "error"
-
+      toastType.value = "error";
     }
-    showToast.value = true
+    showToast.value = true;
 
     setTimeout(() => {
-      showToast.value = false
+      showToast.value = false;
       enteredCode.value = [];
     }, 3000);
 
-
   } else {
     toastMessage.value = "Code invalide, saisissez 4 chiffres.";
-    toastType.value = "warning"
-    showToast.value = true
+    toastType.value = "warning";
+    showToast.value = true;
 
     setTimeout(() => {
-      showToast.value = false
+      showToast.value = false;
       toastMessage.value = null;
     }, 3000);
   }
@@ -148,11 +141,9 @@ const verifySecretCode = () => {
 const hideToast = () => {
   showToast.value = false;
 };
-
 </script>
 
 <style scoped>
-
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s;
 }

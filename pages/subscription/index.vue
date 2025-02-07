@@ -21,7 +21,7 @@
 
       <div class="text-center relative">
         <p class="text-2xl font-bold">
-          Plus besoin de vous déplacer en agence en cas de perte de votre carte
+          Vous n'avez pas encore souscrit au Sim swap(Remplacement de Sim)
         </p>
         <p class="text-gray-400 text-sm mt-3">infos à ajouter</p>
       </div>
@@ -32,11 +32,6 @@
       >
         Souscrire Maintenant
       </button>
-
-      <div class="mt-5 w-full bg-orange-100 text-orange-700 p-5 rounded-lg flex items-center mb-3">
-        <span class="flex-1">Service est uniquement disponible sur Abidjan</span>
-        <Info class="w-5 h-5" />
-      </div>
     </div>
 
     <!-- Overlay couvrant tout le texte sous l’image -->

@@ -5,6 +5,10 @@ import { ref } from 'vue';
 const router = useRouter();
 const phoneNumber = ref('');
 
+const formatPhoneNumber = () => {
+  phoneNumber.value = phoneNumber.value.replace(/\D/g, '').slice(0, 10);
+};
+
 const goToOtp = () => {
   router.push({ path: '/otp', query: { phone: phoneNumber.value } });
 };
@@ -30,6 +34,8 @@ const goToOtp = () => {
           type="tel"
           placeholder="07XXXXXXXX"
           class="border rounded-md p-3 mt-3 text-lg focus:outline-none focus:ring-2 focus:ring-[#FF7900]"
+          @input="formatPhoneNumber"
+          maxlength="10"
         />
     </div>
 

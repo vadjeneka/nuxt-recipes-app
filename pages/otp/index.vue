@@ -24,6 +24,8 @@
         class="w-12 h-12 border rounded-lg text-center text-xl focus:outline-none focus:ring-2 focus:ring-[#FF7900]"
         v-model="otp[index]"
         @input="moveFocus(index, $event)"
+        @keypress="onlyNumbers"
+        autocomplete="one-time-code"
       />
     </div>
 
@@ -78,20 +80,47 @@ onMounted(() => {
   mode.value = route.query.mode ? String(route.query.mode) : null;
 });
 
+
 const moveFocus = (index, event) => {
-  if (event.target.value && index < otp.value.length - 1) {
-    event.target.nextElementSibling?.focus();
+  const input = event.target;
+  const value = input.value.replace(/\D/g, "");
+  otp.value[index] = value;
+
+  if (value) {
+    if (index < otp.value.length - 1) {
+      input.nextElementSibling?.focus();
+    }
+  } else if (event.inputType === "deleteContentBackward") {
+
+    if (index > 0) {
+      input.previousElementSibling?.focus();
+      otp.value[index] = "";
+    }
   }
 };
+
+const onlyNumbers = (event) => {
+  if (!/^\d$/.test(event.key)) {
+    event.preventDefault();
+  }
+};
+
 
 const resendOtp = () => {
   console.log('OTP renvoyé à', phone.value || email.value);
 };
 
 const verifyOtp = () => {
-  console.log('OTP entré :', otp.value.join(''));
   if (otp.value.join('') === "00000") {
-    goToSetOrangeMoneySecretCode()
+    showToast.value = true
+    toastMessage.value = "Otp invalide !";
+    toastType.value = "success"
+
+    setTimeout(() => {
+      showToast.value = false;
+      goToSetOrangeMoneySecretCode();
+    }, 2000);
+
   } else {
     showToast.value = true
     toastMessage.value = "Otp invalide !";
