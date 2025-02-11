@@ -46,7 +46,7 @@
         >
           <h2 class="text-lg font-bold text-center mb-3">Sélection du mode de récupération</h2>
           <ul class="mt-4 space-y-5 flex-1">
-            <NuxtLink to="/phone-number" >
+            <NuxtLink :to="phoneNumberLinkRegister" >
               <li class="flex justify-between items-center p-3 border-b-2">
                 <span class="w-16 h-16 bg-[#3e3e3e] rounded-lg flex justify-center items-center p-4">
                   <img src="/principal.svg" class="w-full h-full" alt="principal" />
@@ -61,7 +61,7 @@
               </li>
             </NuxtLink>
 
-            <NuxtLink to="/email" >
+            <NuxtLink :to="emailLinkRegister" >
               <li class="flex justify-between items-center p-3 border-b-2">
                 <span class="w-16 h-16 bg-[#3e3e3e] rounded-lg flex justify-center items-center p-4">
                   <img src="/Group-130.svg" class="w-full h-full" alt="" />
@@ -76,7 +76,7 @@
               </li>
             </NuxtLink>
 
-            <NuxtLink to="/phone-email" >
+            <NuxtLink :to="emailPhoneLinkRegister" >
               <li class="flex justify-between items-center p-3 border-b-2">
                 <span class="w-16 h-16 bg-[#3e3e3e] rounded-lg flex justify-center items-center p-4">
                   <img src="/Frame.svg" class="w-full h-full" alt="" />
@@ -102,6 +102,21 @@
 import { ref } from 'vue';
 import { Info, ArrowLeft, ArrowRight, ChevronRight} from 'lucide-vue-next';
 const showOverlay = ref(false);
+
+const phoneNumberLinkRegister = computed(() => ({
+  path: '/phone-number',
+  query: {provider: 'new-register'}
+}));
+
+const emailLinkRegister = computed(() => ({
+  path: '/email',
+  query: {provider: 'new-register'}
+}));
+
+const emailPhoneLinkRegister = computed(() => ({
+  path: '/phone-email',
+  query: {provider: 'new-register'}
+}));
 </script>
 
 <style scoped>

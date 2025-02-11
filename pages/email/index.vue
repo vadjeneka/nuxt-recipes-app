@@ -11,7 +11,8 @@ const isValidEmail = (email: string) => {
 };
 
 const goToOtp = () => {
-  router.push({ path: '/otp', query: { email: email.value } });
+  router.push({ path: '/otp', query: { email: email.value,
+    provider: router.currentRoute.value.query.provider } });
 };
 </script>
 

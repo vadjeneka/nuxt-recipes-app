@@ -61,23 +61,48 @@ const route = useRoute();
 const phone = ref<string | null>(null);
 const email = ref<string | null>(null);
 const mode = ref<string | null>(null);
+const provider = ref<string | null>(null);
 const otp = ref(Array(5).fill(''));
 const toastMessage = ref<string | null>(null);
 const showToast = ref(false);
 const toastType = ref<string | null>(null);
 
 const goToSetOrangeMoneySecretCode = () => {
+  console.log("PROVIDER", provider.value)
   if (mode.value === '3') {
-    router.push({path: '/add-email', query: {phone: phone.value || email.value}})
-  } else {
-    router.push({ path: '/orange-money', query: { phone: phone.value || email.value } });
+    router.push({path: '/add-email', query: {
+      phone: phone.value || email.value,
+      provider: router.currentRoute.value.query.provider
+    }})
   }
+
+  if (provider.value === "new-register") {
+    router.push({path: '/subscription/instructions', query: {
+      phone: phone.value || email.value,
+      provider: router.currentRoute.value.query.provider
+    }})
+  }
+  
+  if (provider.value === "new-register" && mode.value === '3' ) {
+    router.push({path: '/add-email', query: {
+      phone: phone.value || email.value,
+      provider: router.currentRoute.value.query.provider
+    }})
+  }
+
+  if (mode.value === null && provider.value === null) {
+    router.push({ path: '/orange-money', query: { 
+      phone: phone.value || email.value ,
+      provider: router.currentRoute.value.query.provider} });
+  }
+
 };
 
 onMounted(() => {
   phone.value = route.query.phone ? String(route.query.phone) : null;
   email.value = route.query.email ? String(route.query.email) : null;
   mode.value = route.query.mode ? String(route.query.mode) : null;
+  provider.value = route.query.provider ? String(route.query.provider) : null;
 });
 
 

@@ -3,12 +3,23 @@ import { ref } from 'vue';
 
 
 const router = useRouter();
+const route = useRoute();
 const phoneNumber = ref('');
 const mode = ref(3)
+const provider = ref<string | null>(null);
+
 
 const goToOtp = () => {
-  router.push({ path: '/otp', query: { phone: phoneNumber.value, mode: mode.value } });
+  router.push({ path: '/otp', query: { 
+    phone: phoneNumber.value,
+    mode: mode.value,
+    provider: router.currentRoute.value.query.provider
+   } });
 };
+
+onMounted(() => {
+  provider.value = route.query.provider ? String(route.query.provider) : null;
+})
 </script>
 
 <template>

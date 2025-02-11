@@ -1,10 +1,11 @@
 <template>
   <div class="min-h-screen flex flex-col bg-white px-4 relative">
-    <atom-page-header title="Nouvelle Acquisition"/>
-    
-    <div class="m-4">
-      <div class="w-full bg-[#FF7900] rounded-full h-1.5 mb-4 dark:bg-gray-300">
-        <div class="bg-[#FF7900] h-1.5 rounded-full dark:bg-[#FF7900]" style="width: 45%"></div>
+    <div v-if="!isCameraOpen">
+      <atom-page-header title="Nouvelle Acquisition"/>
+      <div class="m-4">
+        <div class="w-full bg-[#FF7900] rounded-full h-1.5 mb-4 dark:bg-gray-300">
+          <div class="bg-[#FF7900] h-1.5 rounded-full dark:bg-[#FF7900]" style="width: 45%"></div>
+        </div>
       </div>
     </div>
 
@@ -50,22 +51,40 @@
       </div>
 
 
-      <div v-if="isCameraOpen" class="mt-5 w-full flex flex-col items-center relative">
+      <div v-if="isCameraOpen" class="mt-5 w-full flex-grow min-h-[70vh] flex flex-col items-center justify-center relative">
 
-        <video ref="videoElement" autoplay class="rounded-lg shadow-md h-full pointer-events-auto"></video>
+        <video ref="videoElement" autoplay class="absolute inset-0 rounded-lg shadow-md w-full h-full object-cover pointer-events-auto"></video>
+        <img v-if="capturedImage" :src="capturedImage" class="absolute inset-0 w-full h-full object-cover" />
 
-        <button @click="closeSelfie()" class="absolute top-2 right-2 bg-gray-600 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:bg-gray-800 z-50">
+
+        <button @click="closeSelfie()" v-if="!capturedImage"
+          class="absolute top-2 right-2 bg-gray-600 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:bg-gray-800 z-50">
+          <X class="w-8 h-8"/>
+        </button>
+
+        <button @click="removeSelfie()" v-if="capturedImage"
+          class="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-md hover:bg-gray-800 z-50">
           <X class="w-8 h-8"/>
         </button>
 
         <button
-          @click="captureSelfie"
-          class="absolute bottom-5 z-50 bg-white bg-opacity-50 border-4 border-white w-20 h-20 rounded-full shadow-lg hover:bg-opacity-80"
-        >
-        Capture
+          @click="captureSelfie" v-if="!capturedImage"
+          class="absolute bottom-5 z-50 bg-white bg-opacity-50 border-4 border-[#FF7900] w-20 h-20 rounded-full shadow-lg hover:bg-opacity-80 flex items-center justify-center"
+          :disabled="isLoading"
+          >
+          <span v-if="isLoading" class="animate-spin border-4 border-[#FF7900] border-t-transparent rounded-full w-10 h-10"></span>
+          <span v-else>Capture</span>
         </button>
+
       </div>
 
+        <button
+          v-if="capturedImage"
+          class="w-full bg-[#FF7900] text-white py-3 rounded-lg shadow-md hover:bg-orange-600 mt-5 z-50"
+          @click="goToConfirmationPage()"
+        >
+          Continuer
+        </button>
       <!-- <input type="file" accept="image/*" capture="user" id="selfie-input" /> -->
 
       <button
@@ -87,6 +106,8 @@ import { X } from 'lucide-vue-next';
 const isCameraOpen = ref(false);
 const videoElement = ref(null);
 const capturedImage = ref(null);
+const router = useRouter()
+const isLoading = ref(false);
 
 const startFromSelfieCamera = async () => {
   try {
@@ -105,18 +126,26 @@ const startFromSelfieCamera = async () => {
   }
 };
 
-const captureSelfie = () => {
-  const canvas = document.createElement("canvas");
-  const video = videoElement.value;
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  const context = canvas.getContext("2d");
-  context.drawImage(video, 0, 0, canvas.width, canvas.height);
-  capturedImage.value = canvas.toDataURL("image/png");
-  console.log("Photo capturée :", capturedImage.value);
+const captureSelfie = async () => {
+  isLoading.value = true;
 
+  setTimeout(() => {
+    const canvas = document.createElement("canvas");
+    const video = videoElement.value;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext("2d");
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    capturedImage.value = canvas.toDataURL("image/png");
+    console.log("Photo capturée :", capturedImage.value);
+    // closeSelfie();
 
-  closeSelfie();
+    // if (capturedImage.value != null) {
+    //   goToConfirmationPage();
+    // }
+
+    isLoading.value = false;
+  }, 1000);
 };
 
 const closeSelfie = () => {
@@ -129,9 +158,19 @@ const closeSelfie = () => {
   isCameraOpen.value = false;
 };
 
+const removeSelfie = () => {
+  capturedImage.value = null;
+}
+
 
 // const takePhoto = () => {
 //   document.getElementById('selfie-card');
 // };
+
+const goToConfirmationPage = () => {
+  router.push({
+    path: '/subscription/confirmation'
+  })
+}
 
 </script>

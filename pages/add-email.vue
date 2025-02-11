@@ -2,12 +2,20 @@
 import { ArrowLeft, Search, Bell, MessageCircleQuestion, UserCircle } from 'lucide-vue-next';
 
 const router = useRouter();
+const route = useRoute();
+
 
 const phone = ref('');
 const email = ref('');
+const provider = ref<string | null>(null);
+
 const goToSetEmail = (phoneNumber) => {
-  router.push({ path: '/email', query: { phone: phoneNumber, email: null } });
+  router.push({ path: '/email', query: { phone: phoneNumber, email: null, provider: router.currentRoute.value.query.provider } });
 };
+
+onMounted(() => {
+  provider.value = route.query.provider ? String(route.query.provider) : null;
+});
 
 </script>
 

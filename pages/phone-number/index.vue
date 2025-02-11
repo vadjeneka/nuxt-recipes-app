@@ -9,8 +9,11 @@ const formatPhoneNumber = () => {
   phoneNumber.value = phoneNumber.value.replace(/\D/g, '').slice(0, 10);
 };
 
+// console.log("Router", router.currentRoute.value?.query.provider)
+
 const goToOtp = () => {
-  router.push({ path: '/otp', query: { phone: phoneNumber.value } });
+  router.push({ path: '/otp', query: { phone: phoneNumber.value,
+    provider: router.currentRoute.value.query.provider  } });
 };
 </script>
 
